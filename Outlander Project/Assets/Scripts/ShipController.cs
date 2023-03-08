@@ -48,12 +48,12 @@ public class ShipController : MonoBehaviour
         if (Input.GetKey(KeyCode.Q))
         {
             strafeInput = 1f;
-            rb.AddForce(Vector2.left * strafeInput * thrustSpeed);
+            rb.AddForce(-transform.right * strafeInput * thrustSpeed);
         }
         else if (Input.GetKey(KeyCode.E))
         {
             strafeInput = -1f;
-            rb.AddForce(Vector2.right * strafeInput * thrustSpeed);
+            rb.AddForce(transform.right * strafeInput * thrustSpeed);
         }
 
 
