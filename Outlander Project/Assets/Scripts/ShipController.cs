@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class ShipController : MonoBehaviour
 {
-    [SerializeField] private float thrustSpeed = 10f; // Speed of ship thrust
-    [SerializeField] private float rotateSpeed = 100f; // Speed of ship rotation
+    [SerializeField] private float thrustSpeed; // Speed of ship thrust
+    [SerializeField] private float boostSpeed; // Speed of ship boost
+    [SerializeField] private float rotateSpeed; // Speed of ship rotation
+    [SerializeField] private float fuel; // Speed of ship rotation
+
 
     private Rigidbody2D rb;
     private Vector3 thrustDirection = Vector2.up;
@@ -19,7 +22,9 @@ public class ShipController : MonoBehaviour
     {
         // Get the player's input for rotation and thrust
         float rotationInput = Input.GetAxis("Horizontal");
+        float strafeInput = Input.GetAxis("Horizontal");
         float thrustInput = Input.GetAxis("Vertical");
+        
 
         if (Input.GetKey(KeyCode.A))
         {
@@ -39,6 +44,26 @@ public class ShipController : MonoBehaviour
             thrustInput = -1f;
         }
 
+        // strafing
+        if (Input.GetKey(KeyCode.Q))
+        {
+            strafeInput = 1f;
+            rb.AddForce(Vector2.left * strafeInput * thrustSpeed);
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            strafeInput = -1f;
+            rb.AddForce(Vector2.right * strafeInput * thrustSpeed);
+        }
+
+
+        // boost
+        if (Input.GetKey(KeyCode.Space))
+        {
+            thrustInput = 1f;
+            rb.AddForce(thrustDirection * thrustInput * boostSpeed);
+        }
+
         // Rotate the ship based on player input
         float rotationAmount = rotationInput * rotateSpeed * Time.fixedDeltaTime;
         rb.rotation -= rotationAmount;
@@ -46,5 +71,6 @@ public class ShipController : MonoBehaviour
         // Apply thrust to the ship in the direction it's facing
         thrustDirection = Quaternion.AngleAxis(rotationInput * rotateSpeed * Time.deltaTime, Vector3.back) * thrustDirection;
         rb.AddForce(thrustDirection * thrustInput * thrustSpeed);
+        
     }
 }
