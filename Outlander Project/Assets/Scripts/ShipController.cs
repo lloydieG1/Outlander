@@ -1,76 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShipController : MonoBehaviour
 {
-    [SerializeField] private float thrustSpeed; // Speed of ship thrust
-    [SerializeField] private float boostSpeed; // Speed of ship boost
-    [SerializeField] private float rotateSpeed; // Speed of ship rotation
-    [SerializeField] private float fuel; // Speed of ship rotation
-
+    [SerializeField] private float thrustSpeed;
+    [SerializeField] private float strafeSpeed; // Add a separate variable for strafe speed
+    [SerializeField] private float boostSpeed;
+    [SerializeField] private float rotateSpeed;
+    [SerializeField] private float fuel;
 
     private Rigidbody2D rb;
-    private Vector3 thrustDirection = Vector2.up;
+    private float rotationInput;
+    private float thrustInput;
+    private float strafeInput;
+    private bool boost;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        // Get the player's input for rotation and thrust
-        float rotationInput = Input.GetAxis("Horizontal");
-        float strafeInput = Input.GetAxis("Horizontal");
-        float thrustInput = Input.GetAxis("Vertical");
-        
+        rotationInput = Input.GetAxis("Horizontal");
+        thrustInput = Input.GetAxis("Vertical");
+        boost = Input.GetKey(KeyCode.Space);
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            rotationInput = -1f;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            rotationInput = 1f;
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            thrustInput = 1f;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            thrustInput = -1f;
-        }
-
-        // strafing
+        // Strafe input
         if (Input.GetKey(KeyCode.Q))
         {
             strafeInput = 1f;
-            rb.AddForce(-transform.right * strafeInput * thrustSpeed);
         }
         else if (Input.GetKey(KeyCode.E))
         {
             strafeInput = -1f;
-            rb.AddForce(transform.right * strafeInput * thrustSpeed);
         }
-
-
-        // boost
-        if (Input.GetKey(KeyCode.Space))
+        else
         {
-            thrustInput = 1f;
-            rb.AddForce(thrustDirection * thrustInput * boostSpeed);
+            strafeInput = 0f;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        InputCommand rotateCommand = new RotateCommand(rb, rotationInput * rotateSpeed * Time.fixedDeltaTime);
+        rotateCommand.Execute();
+
+        if (thrustInput != 0)
+        {
+            float currentThrustSpeed = boost ? boostSpeed : thrustSpeed;
+            InputCommand thrustCommand = new ThrustCommand(rb, transform.up, thrustInput * currentThrustSpeed);
+            thrustCommand.Execute();
         }
 
-        // Rotate the ship based on player input
-        float rotationAmount = rotationInput * rotateSpeed * Time.fixedDeltaTime;
-        rb.rotation -= rotationAmount;
-
-        // Apply thrust to the ship in the direction it's facing
-        thrustDirection = Quaternion.AngleAxis(rotationInput * rotateSpeed * Time.deltaTime, Vector3.back) * thrustDirection;
-        rb.AddForce(thrustDirection * thrustInput * thrustSpeed);
-        
+        if (strafeInput != 0)
+        {
+            Vector2 strafeDirection = strafeInput > 0 ? -transform.right : transform.right;
+            InputCommand strafeCommand = new StrafeCommand(rb, strafeDirection, Mathf.Abs(strafeInput) * strafeSpeed);
+            strafeCommand.Execute();
+        }
     }
 }
