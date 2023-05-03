@@ -583,7 +583,7 @@ MonoBehaviour:
   rotationFollowSpeed: 0.1
   minOrthographicSize: 10
   maxOrthographicSize: 15
-  radiusPercentage: 1.5
+  radiusPercentage: 2
 --- !u!1001 &695598020
 PrefabInstance:
   m_ObjectHideFlags: 0
