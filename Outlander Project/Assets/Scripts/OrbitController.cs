@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OrbitController : MonoBehaviour
 {
-    public float orbitSpeed = 10f; // Set the orbit speed.
+    public float orbitSpeed; // Set the orbit speed.
     public Transform centralBody; // Set the central body to orbit around.
 
     private Vector2 initialPosition;

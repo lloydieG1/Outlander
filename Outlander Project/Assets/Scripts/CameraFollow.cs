@@ -13,6 +13,7 @@ public class CameraFollow : MonoBehaviour
 
     private Camera mainCamera;
     private Transform activeCelestialBody;
+    private float transitionProgress = 1f; // Add a transition progress variable (1 means fully transitioned)
 
     void Start()
     {
@@ -31,6 +32,9 @@ public class CameraFollow : MonoBehaviour
         targetPosition.z = transform.position.z;
         transform.position = Vector3.Lerp(transform.position, targetPosition, positionFollowSpeed);
 
+        // Increment the transition progress
+        transitionProgress += Time.deltaTime;
+
         if (activeCelestialBody != null)
         {
             // Use the position directly without checking for the parent
@@ -40,30 +44,31 @@ public class CameraFollow : MonoBehaviour
             Vector3 directionToBodyCenter = (worldPosition - target.position).normalized;
             float targetAngle = Mathf.Atan2(directionToBodyCenter.y, directionToBodyCenter.x) * Mathf.Rad2Deg + 90f;
             Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationFollowSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationFollowSpeed * transitionProgress);
 
             // Set the orthographic size based on the distance to the celestial body
             float distanceToBody = Vector3.Distance(target.position, worldPosition);
             float distanceToSurface = distanceToBody - activeCelestialBody.localScale.x * 0.5f;
             float orthographicSize = Mathf.Lerp(minOrthographicSize, maxOrthographicSize, distanceToSurface / (activeCelestialBody.localScale.x * radiusPercentage));
-            mainCamera.orthographicSize = orthographicSize;
+            mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, orthographicSize, positionFollowSpeed * transitionProgress);
         }
         else
         {
             // Reset rotation and orthographic size
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, rotationFollowSpeed);
-            mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, maxOrthographicSize, positionFollowSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, rotationFollowSpeed * transitionProgress);
+            mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, maxOrthographicSize, positionFollowSpeed * transitionProgress);
         }
     }
 
     private void FindClosestCelestialBody()
     {
         // Reset active celestial body
+        Transform previousActiveCelestialBody = activeCelestialBody;
         activeCelestialBody = null;
         float minDistance = float.MaxValue;
 
         // Check the distance to each celestial body
-        foreach (Transform celestialBody in celestialBodies)
+               foreach (Transform celestialBody in celestialBodies)
         {
             // Use the position directly without checking for the parent
             Vector3 worldPosition = celestialBody.position;
@@ -77,5 +82,12 @@ public class CameraFollow : MonoBehaviour
                 minDistance = distance;
             }
         }
+
+        // If the active celestial body has changed, reset the transition progress
+        if (previousActiveCelestialBody != activeCelestialBody)
+        {
+            transitionProgress = 0f;
+        }
     }
 }
+
