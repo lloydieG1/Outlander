@@ -5,20 +5,27 @@ using UnityEngine;
 public class OrbitController : MonoBehaviour
 {
     public float orbitSpeed = 10f; // Set the orbit speed.
-    public float orbitRadius = 3f; // Set the orbit radius.
+    public Transform centralBody; // Set the central body to orbit around.
 
-    private Transform _centralPlanet;
+    private Vector2 initialPosition;
 
     private void Start()
     {
-        _centralPlanet = transform.parent; // Get the central planet (parent).
-        transform.localPosition = new Vector2(orbitRadius, 0f); // Set the initial position.
+        if (centralBody == null)
+        {
+            Debug.LogError("Central body not assigned in the OrbitController component.");
+            return;
+        }
+
+        initialPosition = transform.position; // Set the initial position based on the position in the Scene editor.
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (centralBody == null) return;
+
         float angle = orbitSpeed * Time.deltaTime; // Calculate the angle change.
-        RotateAround(_centralPlanet.position, angle); // Rotate around the central planet.
+        RotateAround(centralBody.position, angle); // Rotate around the central planet.
     }
 
     private void RotateAround(Vector2 center, float angle)
@@ -28,4 +35,3 @@ public class OrbitController : MonoBehaviour
         transform.position = center + direction;
     }
 }
-
