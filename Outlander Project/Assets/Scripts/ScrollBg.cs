@@ -9,7 +9,7 @@ public class ScrollBg : MonoBehaviour
     Vector2 offset;
 
     // this number is calculated based on the quad size (1/50) and the tile size (1/2) and the orthographic size (20) minus a bit for some parallax.
-    [SerializeField] private float scrollSpeed = 0.0035f;
+    [SerializeField] private float scrollSpeed = 0.007f;
 
     // Start is called before the first frame update
     void Start()
