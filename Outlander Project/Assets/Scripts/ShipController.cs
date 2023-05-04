@@ -38,6 +38,7 @@ public class ShipController : MonoBehaviour
         {
             strafeInput = 0f;
         }
+
     }
 
     void FixedUpdate()
