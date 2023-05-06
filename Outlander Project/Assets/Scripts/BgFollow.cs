@@ -1,9 +1,25 @@
 using UnityEngine;
 
+[RequireComponent(typeof(MeshRenderer))]
 public class BgFollow : MonoBehaviour
 {
     [SerializeField] private Transform cameraTransform;
+    [SerializeField] private string sortingLayerName = "Default";
+    [SerializeField] private int orderInLayer;
+
     private Vector3 initialRotation;
+
+    private void Awake()
+    {
+        // Set the sorting layer and order in layer for the mesh renderer
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+
+        if (meshRenderer != null)
+        {
+            meshRenderer.sortingLayerName = sortingLayerName;
+            meshRenderer.sortingOrder = orderInLayer;
+        }
+    }
 
     private void Start()
     {

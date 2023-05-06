@@ -5,11 +5,11 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Transform target;
     [SerializeField] private List<Transform> celestialBodies;
-    [SerializeField] private float positionFollowSpeed = 0.1f;
-    [SerializeField] private float rotationFollowSpeed = 0.1f;
-    [SerializeField] private float minOrthographicSize = 5f;
-    [SerializeField] private float maxOrthographicSize = 10f;
-    [SerializeField] private float radiusPercentage = 1.5f;
+    [SerializeField] private float positionFollowSpeed;
+    [SerializeField] private float rotationFollowSpeed;
+    [SerializeField] private float minOrthographicSize;
+    [SerializeField] private float maxOrthographicSize;
+    [SerializeField] private float switchDistance;
 
     private Camera mainCamera;
     private Transform activeCelestialBody;
@@ -49,7 +49,7 @@ public class CameraFollow : MonoBehaviour
             // Set the orthographic size based on the distance to the celestial body
             float distanceToBody = Vector3.Distance(target.position, worldPosition);
             float distanceToSurface = distanceToBody - activeCelestialBody.localScale.x * 0.5f;
-            float orthographicSize = Mathf.Lerp(minOrthographicSize, maxOrthographicSize, distanceToSurface / (activeCelestialBody.localScale.x * radiusPercentage));
+            float orthographicSize = Mathf.Lerp(minOrthographicSize, maxOrthographicSize, distanceToSurface / switchDistance);
             mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, orthographicSize, positionFollowSpeed * transitionProgress);
         }
         else
@@ -68,15 +68,15 @@ public class CameraFollow : MonoBehaviour
         float minDistance = float.MaxValue;
 
         // Check the distance to each celestial body
-               foreach (Transform celestialBody in celestialBodies)
+        foreach (Transform celestialBody in celestialBodies)
         {
             // Use the position directly without checking for the parent
             Vector3 worldPosition = celestialBody.position;
 
             float distance = Vector3.Distance(target.position, worldPosition);
-            float radius = celestialBody.localScale.x * 0.5f * radiusPercentage;
+            float radius = celestialBody.localScale.x * 0.5f;
 
-            if (distance < radius && distance < minDistance)
+            if (distance < radius + switchDistance && distance < minDistance)
             {
                 activeCelestialBody = celestialBody;
                 minDistance = distance;
