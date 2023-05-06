@@ -43,3 +43,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackgroundFar
+    uniqueID: 2965122603
+    locked: 0
+  - name: BackgroundClose
+    uniqueID: 2909931575
+    locked: 0
+  - name: CelestialBody
+    uniqueID: 422931829
+    locked: 0
+  - name: Player
+    uniqueID: 514303931
+    locked: 0
+  - name: Structure
+    uniqueID: 3597124967
+    locked: 0
