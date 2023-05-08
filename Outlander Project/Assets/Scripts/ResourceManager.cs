@@ -8,8 +8,10 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager Instance { get; private set; }
     [SerializeField] private float fuel;
     [SerializeField] private int gold;
+    [SerializeField] private float ammo; 
     [SerializeField] private float maxFuel;
     [SerializeField] private int maxGold;
+    [SerializeField] private float maxAmmo; 
 
     private void Awake()
     {
@@ -31,7 +33,8 @@ public class ResourceManager : MonoBehaviour
 
     public void AddFuel(float amount)
     {
-        fuel += amount;
+        fuel = Mathf.Min(fuel + amount, maxFuel);
+        
     }
 
     public void ConsumeFuel(float amount)
@@ -44,6 +47,12 @@ public class ResourceManager : MonoBehaviour
         return gold;
     }
 
+    public int GetMaxGold()
+    {
+        return maxGold;
+    }
+
+
     public float GetMaxFuel()
     {
         return maxFuel;
@@ -51,11 +60,36 @@ public class ResourceManager : MonoBehaviour
 
     public void AddGold(int amount)
     {
-        gold += amount;
+        gold = Mathf.Min(gold + amount, maxGold);
     }
 
     public void SpendGold(int amount)
     {
         gold = Mathf.Max(gold - amount, 0);
+    }
+
+    public float GetAmmo()
+    {
+        return ammo;
+    }
+
+    public float GetMaxAmmo()
+    {
+        return maxAmmo;
+    }
+
+    public void AddAmmo(float amount)
+    {
+        ammo = Mathf.Min(ammo + amount, maxAmmo);
+    }
+
+    public bool ConsumeAmmo(float amount)
+    {
+        if (ammo >= amount)
+        {
+            ammo -= amount;
+            return true;
+        }
+        return false;
     }
 }

@@ -1,43 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceTrigger : MonoBehaviour
 {
-    public string tagToSet;
-    public int resourceAmount;
-    public int depletionRate;
+    public enum ResourceType { Fuel, Ammo, Gold }
 
+    [SerializeField] private ResourceType resourceType;
+    [SerializeField] private float resourceAmountPerSecond;
 
-    private void Start() 
-    {   
-        // if the tag is not set
-        if (gameObject.CompareTag("Untagged") && !string.IsNullOrEmpty(tagToSet))
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Spaceship"))
         {
-            gameObject.tag = tagToSet;
-        } else {
-            tagToSet = gameObject.tag;
+            InvokeRepeating(nameof(GiveResources), 0f, 0.1f);
         }
     }
 
-    public void mine() 
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        resourceAmount -= depletionRate;
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        #if UNITY_EDITOR
-        // Draw a wireframe rectangle around the trigger collider
-        if (gameObject.CompareTag("Metal")){
-            Gizmos.color = Color.black;
-        } else if (gameObject.CompareTag("HealJuice")) {
-            Gizmos.color = Color.red;
+        if (collision.CompareTag("Spaceship"))
+        {
+            CancelInvoke(nameof(GiveResources));
         }
-        
-        Gizmos.DrawWireCube(transform.position, GetComponent<BoxCollider2D>().size);
-        #endif
     }
 
+    private void GiveResources()
+    {
+        ResourceManager resourceManager = ResourceManager.Instance;
+        switch (resourceType)
+        {
+            case ResourceType.Fuel:
+                resourceManager.AddFuel(resourceAmountPerSecond/10f);
+                break;
+            case ResourceType.Ammo:
+                resourceManager.AddAmmo(resourceAmountPerSecond/10f);
+                break;
+            case ResourceType.Gold:
+                resourceManager.AddGold(Mathf.RoundToInt(resourceAmountPerSecond/10f));
+                break;
+        }
+    }
 }

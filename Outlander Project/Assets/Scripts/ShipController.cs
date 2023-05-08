@@ -23,7 +23,7 @@ public class ShipController : MonoBehaviour
     {
         rotationInput = Input.GetAxis("Horizontal");
         thrustInput = Input.GetAxis("Vertical");
-        boost = Input.GetKey(KeyCode.Space);
+        //boost = Input.GetKey(KeyCode.Space);
 
         // Strafe input
         if (Input.GetKey(KeyCode.Q))
