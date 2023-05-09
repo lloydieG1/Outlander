@@ -5,12 +5,14 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float thrustSpeed;
     [SerializeField] private float strafeSpeed;
     [SerializeField] private float boostSpeed;
-    [SerializeField] private float fuelConsumptionRate = 1.0f;
+    [SerializeField] private float fuelConsumptionRate;
+    [SerializeField] private float brakingForce;
 
     private Rigidbody2D rb;
     private float verticalInput;
     private float horizontalInput;
     private bool boost;
+    private bool brake;
 
     void Start()
     {
@@ -22,10 +24,12 @@ public class ShipController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         boost = Input.GetKey(KeyCode.Space);
+        brake = Input.GetKey(KeyCode.LeftShift);
     }
 
     void FixedUpdate()
     {
+        
         // Rotate to face the mouse position
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
         float angle = Mathf.Atan2(mousePosition.y - transform.position.y, mousePosition.x - transform.position.x) * Mathf.Rad2Deg - 90f;
@@ -46,7 +50,17 @@ public class ShipController : MonoBehaviour
         if (moveDirection != Vector2.zero)
         {
             rb.AddForce(force);
-            ResourceManager.Instance.ConsumeFuel(fuelConsumptionRate * moveDirection.magnitude * Time.fixedDeltaTime);
+            ResourceManager.Instance.ConsumeFuel(fuelConsumptionRate * Time.fixedDeltaTime);
+        }
+
+        if (brake)
+        {
+            // Apply a braking force proportional to the current velocity
+            Vector2 brakingForceVector = -rb.velocity * brakingForce;
+            rb.AddForce(brakingForceVector);
+
+            // Consume fuel proportional to the braking force applied
+            ResourceManager.Instance.ConsumeFuel(fuelConsumptionRate * Time.fixedDeltaTime);
         }
     }
 }
