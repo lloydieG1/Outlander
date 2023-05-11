@@ -26,6 +26,14 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    //reset
+    public void Reset()
+    {
+        fuel = maxFuel;
+        gold = maxGold;
+        ammo = maxAmmo;
+    }
+
     public float GetFuel()
     {
         return fuel;

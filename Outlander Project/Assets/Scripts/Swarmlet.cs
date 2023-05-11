@@ -5,13 +5,15 @@ public class Swarmlet : MonoBehaviour
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private int damage = 10;
 
-    private GameObject target;
+    public GameObject target;
     private Health targetHealth;
     private Rigidbody2D rb;
 
     void Start()
     {
+        SetTarget(target);
         rb = GetComponent<Rigidbody2D>();
+        //ServiceLocator.Instance.GetService<AudioManager>().Play("SwarmletWow");
     }
 
     void FixedUpdate()
@@ -19,7 +21,7 @@ public class Swarmlet : MonoBehaviour
         if (target == null) return;
 
         Vector2 direction = ((Vector2)target.transform.position - rb.position).normalized;
-        rb.velocity = direction * moveSpeed;
+        rb.AddForce(direction * moveSpeed); // Apply a force towards the target
     }
 
     void OnCollisionEnter2D(Collision2D collision)

@@ -2,17 +2,24 @@ using UnityEngine;
 
 public class RotateCommand : InputCommand
 {
-    private Rigidbody2D rb;
-    private float rotationAmount;
+    private Transform transform;
+    private Quaternion previousRotation;
+    private Quaternion targetRotation;
 
-    public RotateCommand(Rigidbody2D rb, float rotationAmount)
+    public RotateCommand(Transform transform, Quaternion targetRotation)
     {
-        this.rb = rb;
-        this.rotationAmount = rotationAmount;
+        this.transform = transform;
+        this.targetRotation = targetRotation;
+        this.previousRotation = transform.rotation;
     }
 
     public void Execute()
     {
-        rb.rotation -= rotationAmount;
+        transform.rotation = targetRotation;
+    }
+
+    public void Undo()
+    {
+        transform.rotation = previousRotation;
     }
 }

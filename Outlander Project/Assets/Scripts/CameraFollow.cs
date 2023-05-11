@@ -25,7 +25,9 @@ public class CameraFollow : MonoBehaviour
         FindClosestCelestialBody();
     }
 
-    void FixedUpdate()
+void FixedUpdate()
+{
+    if (target != null)
     {
         // Follow the target's position
         Vector3 targetPosition = target.position;
@@ -52,16 +54,21 @@ public class CameraFollow : MonoBehaviour
             float orthographicSize = Mathf.Lerp(minOrthographicSize, maxOrthographicSize, distanceToSurface / switchDistance);
             mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, orthographicSize, positionFollowSpeed * transitionProgress);
         }
-        else
-        {
-            // Reset rotation and orthographic size
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, rotationFollowSpeed * transitionProgress);
-            mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, maxOrthographicSize, positionFollowSpeed * transitionProgress);
-        }
     }
+    else
+    {
+        // Reset rotation and orthographic size
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, rotationFollowSpeed * transitionProgress);
+        mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, maxOrthographicSize, positionFollowSpeed * transitionProgress);
+    }
+}
+
 
     private void FindClosestCelestialBody()
     {
+        if (target == null)
+            return;
+            
         // Reset active celestial body
         Transform previousActiveCelestialBody = activeCelestialBody;
         activeCelestialBody = null;

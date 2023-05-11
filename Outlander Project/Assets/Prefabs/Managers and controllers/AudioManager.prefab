@@ -44,4 +44,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d91548ae62ffb147aa5872ad43db59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: SwarmletWow
+    clip: {fileID: 8300000, guid: 810fe0fdc2e498649a800960e690e6f0, type: 3}
+    volume: 0.124
+    pitch: 1.54
+    source: {fileID: 0}
+    loop: 1
+  - name: Loss
+    clip: {fileID: 8300000, guid: b166197a49b4c71428d5d2c162a97b25, type: 3}
+    volume: 0.309
+    pitch: 0.67
+    source: {fileID: 0}
+    loop: 0
+  - name: FuelSuck
+    clip: {fileID: 8300000, guid: f9dc421836118a141a7cd1bd1db75e84, type: 3}
+    volume: 0.583
+    pitch: 0.82
+    source: {fileID: 0}
+    loop: 1
+  - name: Laser
+    clip: {fileID: 8300000, guid: 1693af9a4a4344f4ea590241d09dbb5e, type: 3}
+    volume: 0.167
+    pitch: 0.86
+    source: {fileID: 0}
+    loop: 1

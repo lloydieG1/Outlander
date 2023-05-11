@@ -39,5 +39,11 @@ public class FireLaserCommand : InputCommand
         laserLine.SetPosition(0, laserSpawnPoint.position);
         laserLine.SetPosition(1, endPoint);
     }
+
+    public void Undo()
+    {
+        laserLine.SetPosition(0, Vector3.zero);
+        laserLine.SetPosition(1, Vector3.zero);
+    }
 }
 

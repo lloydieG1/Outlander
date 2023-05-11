@@ -17,4 +17,9 @@ public class ThrustCommand : InputCommand
     {
         rb.AddForce(direction * speed);
     }
+
+    public void Undo()
+    {
+        rb.AddForce(-direction * speed);
+    }
 }

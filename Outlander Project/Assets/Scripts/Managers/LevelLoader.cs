@@ -25,11 +25,13 @@ public class LevelLoader : MonoBehaviour
 
     public void LoadLevel(int sceneIndex)
     {
+        Debug.Log("Loading scene " + sceneIndex);
         StartCoroutine(LoadLevelWithFade(sceneIndex));
     }
 
     private IEnumerator LoadLevelWithFade(int sceneIndex)
     {
+        Debug.Log("Fading to " + sceneIndex);
         // Fade in
         float timer = 0f;
         while (timer < fadeDuration)

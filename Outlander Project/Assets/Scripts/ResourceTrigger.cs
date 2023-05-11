@@ -11,6 +11,7 @@ public class ResourceTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Spaceship"))
         {
+            ServiceLocator.Instance.GetService<AudioManager>().Play("FuelSuck");
             InvokeRepeating(nameof(GiveResources), 0f, 0.1f);
         }
     }
@@ -19,6 +20,7 @@ public class ResourceTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Spaceship"))
         {
+            ServiceLocator.Instance.GetService<AudioManager>().Stop("FuelSuck");
             CancelInvoke(nameof(GiveResources));
         }
     }
@@ -29,9 +31,11 @@ public class ResourceTrigger : MonoBehaviour
         switch (resourceType)
         {
             case ResourceType.Fuel:
+                
                 resourceManager.AddFuel(resourceAmountPerSecond/10f);
                 break;
             case ResourceType.Ammo:
+                //ServiceLocator.Instance.GetService<AudioManager>().Play("AmmoSuck");
                 resourceManager.AddAmmo(resourceAmountPerSecond/10f);
                 break;
             case ResourceType.Gold:

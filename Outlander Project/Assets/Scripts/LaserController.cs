@@ -30,6 +30,7 @@ public class LaserController : MonoBehaviour
             spriteRenderer.enabled = true;
             // Consume ammo
             ResourceManager.Instance.ConsumeAmmo(laserAmmoConsumptionRate * Time.deltaTime);
+            ServiceLocator.Instance.GetService<AudioManager>().Play("Laser");
         }
 
         if (Input.GetButton("Fire1"))
@@ -45,6 +46,7 @@ public class LaserController : MonoBehaviour
             // Destroy the laser instance when the fire button is released
             if (laserInstance != null)
             {
+                ServiceLocator.Instance.GetService<AudioManager>().Stop("Laser");
                 Destroy(laserInstance);
             }
         }

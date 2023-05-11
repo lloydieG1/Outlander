@@ -18,7 +18,18 @@ public class DrillCore : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            ServiceLocator.Instance.GetService<AudioManager>().Play("Loss");
+
+            //lose after a delay
+            Invoke("Lose", 2f);
+            // disable sprite
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
+    }
+
+    private void Lose()
+    {
+        Debug.Log("DrillCore.Lose()");
+        LevelLoader.Instance.LoadLevel(0);
     }
 }
