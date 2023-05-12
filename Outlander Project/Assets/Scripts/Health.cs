@@ -33,7 +33,7 @@ public class Health : MonoBehaviour
     {
         CurrentHealth -= damage;
 
-        if (CurrentHealth <= 0 && gameObject.CompareTag("Swarmlet"))
+        if (CurrentHealth <= 0)
         {
             Destroy(gameObject);
         }
@@ -44,7 +44,7 @@ public class Health : MonoBehaviour
     {
         CurrentHealth -= (int)damage;
 
-        if (CurrentHealth <= 0 && gameObject.CompareTag("Swarmlet"))
+        if (CurrentHealth <= 0)
         {
             Destroy(gameObject);
         }

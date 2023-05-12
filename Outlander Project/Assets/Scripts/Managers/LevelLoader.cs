@@ -26,6 +26,7 @@ public class LevelLoader : MonoBehaviour
     public void LoadLevel(int sceneIndex)
     {
         Debug.Log("Loading scene " + sceneIndex);
+        DataManager.Instance.SaveGameData();
         StartCoroutine(LoadLevelWithFade(sceneIndex));
     }
 

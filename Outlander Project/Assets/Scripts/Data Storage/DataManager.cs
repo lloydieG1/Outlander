@@ -6,7 +6,8 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance { get; private set; }
 
     public List<Achievement> achievements;
-    public PlayerProfile playerProfile;
+    public PlayerProfile currentProfile;
+    public List<PlayerProfile> playerProfiles;
 
     private void Awake()
     {
@@ -14,6 +15,14 @@ public class DataManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            if (!PlayerPrefs.HasKey("isFirstTime"))
+            {
+                PlayerPrefs.SetInt("isFirstTime", 1);
+                InitAchievements();
+            }
+
+            LoadGameData();
         }
         else
         {
@@ -22,13 +31,14 @@ public class DataManager : MonoBehaviour
         }
     }
 
+
     public void SaveGameData()
     {
         string achievementsJson = JsonUtility.ToJson(new SerializationWrapper<Achievement>(achievements), prettyPrint: true);
         PlayerPrefs.SetString("achievements", achievementsJson);
 
-        string playerProfileJson = JsonUtility.ToJson(playerProfile, prettyPrint: true);
-        PlayerPrefs.SetString("playerProfile", playerProfileJson);
+        string playerProfilesJson = JsonUtility.ToJson(new SerializationWrapper<PlayerProfile>(playerProfiles), prettyPrint: true);
+        PlayerPrefs.SetString("playerProfiles", playerProfilesJson);
 
         PlayerPrefs.Save();
     }
@@ -40,28 +50,18 @@ public class DataManager : MonoBehaviour
             string achievementsJson = PlayerPrefs.GetString("achievements");
             achievements = JsonUtility.FromJson<SerializationWrapper<Achievement>>(achievementsJson).data;
         }
-        else
-        {
-            // Initialize achievements list if it's the first time loading
-            InitAchievements();
-        }
 
-        if (PlayerPrefs.HasKey("playerProfile"))
+        if (PlayerPrefs.HasKey("playerProfiles"))
         {
-            string playerProfileJson = PlayerPrefs.GetString("playerProfile");
-            playerProfile = JsonUtility.FromJson<PlayerProfile>(playerProfileJson);
+            string playerProfilesJson = PlayerPrefs.GetString("playerProfiles");
+            playerProfiles = JsonUtility.FromJson<SerializationWrapper<PlayerProfile>>(playerProfilesJson).data;
         }
         else
         {
-            // Initialize player profile if it's the first time loading
-            InitPlayerProfile();
+            // Initialize player profiles list if it's the first time loading
+            playerProfiles = new List<PlayerProfile>();
         }
     }
-
-    // public List<PlayerProfile> GetAvailableProfiles()
-    // {
-    // // Load all available profiles from PlayerPrefs, deserialize them, and return the list.
-    // }
 
     public void InitAchievements()
     {
@@ -69,29 +69,35 @@ public class DataManager : MonoBehaviour
         {
             new Achievement
             {
-                name = "First Steps",
-                description = "Complete the tutorial level.",
+                name = "Icarus",
+                description = "Die from flying into the sun",
                 isUnlocked = false
             },
             new Achievement
             {
-                name = "Experienced",
-                description = "Reach level 10.",
+                name = "Existential Horror",
+                description = "Run out of fuel",
                 isUnlocked = false
             },
             // Add more achievements here
         };
+
+        SaveGameData();
     }
 
-    public void InitPlayerProfile()
+    public void UnlockAchievement(string name)
     {
-        playerProfile = new PlayerProfile
+        Achievement achievement = DataManager.Instance.currentProfile.achievements.Find(a => a.name == name);
+        if (achievement != null)
         {
-            playerName = "Player",
-            playerLevel = 1,
-            playerExperience = 0,
-            // Set default values for other player-related data
-        };
+            achievement.isUnlocked = true;
+            SaveGameData();
+        }
+        else
+        {
+            Debug.LogError("Achievement " + name + " not found.");
+        }
     }
+
 
 }

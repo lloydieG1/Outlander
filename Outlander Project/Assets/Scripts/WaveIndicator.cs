@@ -17,6 +17,11 @@ public class WaveIndicator : MonoBehaviour
         waveManager.OnWaveChange += UpdateWaveText;
     }
 
+    private void Update()
+    {
+        UpdateWaveText();
+    }
+
     private void UpdateWaveText()
     {
         if(waveText != null && waveManager != null)

@@ -48,6 +48,10 @@ public class ResourceManager : MonoBehaviour
     public void ConsumeFuel(float amount)
     {
         fuel = Mathf.Max(fuel - amount, 0);
+        if (fuel <= 0)
+        {
+            DataManager.Instance.UnlockAchievement("Existenial Horror");
+        }
     }
 
     public int GetGold()

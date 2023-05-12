@@ -13,13 +13,13 @@ public class LoseOnCollision : MonoBehaviour
             Destroy(other.gameObject);
             ServiceLocator.Instance.GetService<AudioManager>().Play("Loss");
 
-            //lose after a delay
-            Invoke("Lose", 2f);
+            // unlock icarus achievement
+            Debug.Log("Icarus achievement unlocked");
+            Debug.Log(DataManager.Instance.currentProfile.playerName); 
+            DataManager.Instance.UnlockAchievement("Icarus");
+
+            PlayerLose.Instance.SelfDestructAndLoadMainMenu();
         }
     }
 
-    public void Lose() {
-        Debug.Log("LoseOnCollision.Lose()");
-        LevelLoader.Instance.LoadLevel(0);
-    }
 }

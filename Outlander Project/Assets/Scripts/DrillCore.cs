@@ -1,35 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DrillCore : MonoBehaviour
 {
-    public int initialHealth = 100;
-    private int currentHealth;
+    private Health health;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        currentHealth = initialHealth;
+        health = GetComponent<Health>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void TakeDamage(int damage)
+    void Update()
     {
-        currentHealth -= damage;
-
-        if (currentHealth <= 0)
+        if (health != null && health.CurrentHealth <= 0)
         {
-            ServiceLocator.Instance.GetService<AudioManager>().Play("Loss");
-
-            //lose after a delay
-            Invoke("Lose", 2f);
-            // disable sprite
-            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            PlayerLose.Instance.SelfDestructAndLoadMainMenu();
         }
-    }
-
-    private void Lose()
-    {
-        Debug.Log("DrillCore.Lose()");
-        LevelLoader.Instance.LoadLevel(0);
     }
 }

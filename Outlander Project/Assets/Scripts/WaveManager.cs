@@ -35,6 +35,7 @@ public class WaveManager : MonoBehaviour
     {
         CurrentWave++;
         OnWaveChange?.Invoke();
+        Debug.Log("Wave increased to " + CurrentWave);
     }
 
     //reset

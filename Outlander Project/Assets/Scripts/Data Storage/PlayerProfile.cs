@@ -4,8 +4,7 @@ using System.Collections.Generic;
 public class PlayerProfile
 {
     public string playerName;
-    public int playerLevel;
-    public int playerExperience;
+    public int highScore;
 
     public List<Achievement> achievements; 
 }
